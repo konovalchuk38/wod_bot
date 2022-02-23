@@ -1,5 +1,6 @@
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 
+
 // $isReg = registration(1);
 // if ($isReg) {
 // 	pre('успешно зарегистрировался');
