@@ -8,7 +8,7 @@
 // 	pre('уже зарегистрирован');
 // }
 // die();
-// pre(setValue('shield', 173218220, 500000, 'gold'));
+pre(setValue('shield', 173218220, 500000, 'gold'));
 
 // setCurrency('123123', 173218220, 5);
 // pre(getRates(526456686));
@@ -16,8 +16,15 @@
 // $arr = explode('/setPlayers', $message_text);
 // pre($arr);
 // pre(setPlayers($arr[1]));
-$q = preparePlayersBtns();
-pre($q);
-
+// $q = preparePlayersBtns();
+// $q = getMsgId(173218220);
+// pre(IBLOCK_ID_PLAYERS_RATES);
+// $q = getRatesPlayers(IBLOCK_ID_PLAYERS_RATES, 33);
+// pre($q);
+// setRatesHeader('player', $tg_id);
+// setPlayersHeader('player', $tg_id, 5);
 // check();
 // pre(getUser(ADMINS[0]));
+
+pre(getPlayer('/1'));
+setPlayersHeader(getPlayer('/1'), 173218220, 5);
