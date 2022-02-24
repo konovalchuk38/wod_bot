@@ -28,7 +28,10 @@ try {
     	$tg_id = $message->getChat()->getId();
         $sms_rev = '<code>' . getRates($tg_id) . '</code>';
 		$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Сделать ставку")), true, true);
-		$bot->sendMessage($tg_id, $sms_rev, 'html', false, null, $keyboard);
+		$bot->sendMessage($tg_id, $sms_rev, 'html');
+		$user = getUser($tg_id);
+		$playerStr = '<code>' . getRatesPlayers(IBLOCK_ID_PLAYERS_RATES, $user['ID']) . '</code>';
+		$bot->sendMessage($tg_id, $playerStr, 'html', false, null, $keyboard);
     });
 
     $bot->command('help', function ($message) use ($bot) {
@@ -66,43 +69,114 @@ try {
 
     $bot->callbackQuery(function ($message) use ($bot) {
 
-	if ($message->getData() == "option1")
+	if ($message->getData() == "/1")
 	{
-		// If you want you can send some kind of popup message after the user clicked one of the buttons
-		$bot->answerCallbackQuery($message->getId(), "You clicked on option1. Loading...");
-
-		$bot->sendMessage(
-			$message->getFrom()->getId(),
-			"Hi " . $message->getFrom()->getUsername() . ", you've choosen <b>Option 1</b>",
-			"HTML"
+		$tg_id = $message->getFrom()->getId();
+		$sms_rev = "Выберите валюту:";
+		
+		$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+			
+		$temp_message = $bot->sendMessage($tg_id, $sms_rev, null, false, null, $keyboard);
+		$bot->deleteMessage(
+			$temp_message->getChat()->getId(),
+			getMsgId($temp_message->getChat()->getId())
+		);
+		// clearUser($tg_id, 5);
+		$player = getPlayer($message->getData());
+		setPlayersHeader($player, $tg_id, 5);
+		
+		
+		
+	}
+	elseif ($message->getData() == "/2")
+	{
+		$tg_id = $message->getFrom()->getId();
+		$sms_rev = "Выберите валюту:";
+		
+		$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+			
+		$temp_message = $bot->sendMessage($tg_id, $sms_rev, null, false, null, $keyboard);
+		$bot->deleteMessage(
+			$temp_message->getChat()->getId(),
+			getMsgId($temp_message->getChat()->getId())
 		);
 	}
-	elseif ($message->getData() == "/1")
+	elseif ($message->getData() == "/3")
 	{
-		// If you want you can send some kind of popup message after the user clicked one of the buttons
-		$bot->answerCallbackQuery($message->getId(), "You clicked on option3. Loading...");
-
-		// $bot->sendMessage(
-		// 	$message->getFrom()->getId(),
-		// 	"Hi орволырарвоыароывроар1111111",
-		// 	"HTML"
-		// );
-		$temp_message = $bot->sendMessage(
-			$message->getFrom()->getId(),
-			"Hi орволырарвоыароывроар1111111",
-			"HTML"
+		$tg_id = $message->getFrom()->getId();
+		$sms_rev = "Выберите валюту:";
+		
+		$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+			
+		$temp_message = $bot->sendMessage($tg_id, $sms_rev, null, false, null, $keyboard);
+		$bot->deleteMessage(
+			$temp_message->getChat()->getId(),
+			getMsgId($temp_message->getChat()->getId())
 		);
-		// $bot->editMessageText(
-		// 	$temp_message->getChat()->getId(),
-		// 	$temp_message->getMessageId(),
-		// 	"I'm sorry. I found <b>nothing</b>!",
-		// 	"HTML"
-		// );
-		$bot->editMessageText(
-			$temp_message->getFrom()->getId(),
-			getMsgId($message->getChat()->getId()),
-			"I'm sorry. I found <b>nothing</b>!",
-			"HTML"
+	}
+	elseif ($message->getData() == "/4")
+	{
+		$tg_id = $message->getFrom()->getId();
+		$sms_rev = "Выберите валюту:";
+		
+		$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+			
+		$temp_message = $bot->sendMessage($tg_id, $sms_rev, null, false, null, $keyboard);
+		$bot->deleteMessage(
+			$temp_message->getChat()->getId(),
+			getMsgId($temp_message->getChat()->getId())
+		);
+	}
+	elseif ($message->getData() == "/5")
+	{
+		$tg_id = $message->getFrom()->getId();
+		$sms_rev = "Выберите валюту:";
+		
+		$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+			
+		$temp_message = $bot->sendMessage($tg_id, $sms_rev, null, false, null, $keyboard);
+		$bot->deleteMessage(
+			$temp_message->getChat()->getId(),
+			getMsgId($temp_message->getChat()->getId())
+		);
+	}
+	elseif ($message->getData() == "/6")
+	{
+		$tg_id = $message->getFrom()->getId();
+		$sms_rev = "Выберите валюту:";
+		
+		$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+			
+		$temp_message = $bot->sendMessage($tg_id, $sms_rev, null, false, null, $keyboard);
+		$bot->deleteMessage(
+			$temp_message->getChat()->getId(),
+			getMsgId($temp_message->getChat()->getId())
+		);
+	}
+	elseif ($message->getData() == "/7")
+	{
+		$tg_id = $message->getFrom()->getId();
+		$sms_rev = "Выберите валюту:";
+		
+		$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+			
+		$temp_message = $bot->sendMessage($tg_id, $sms_rev, null, false, null, $keyboard);
+		$bot->deleteMessage(
+			$temp_message->getChat()->getId(),
+			getMsgId($temp_message->getChat()->getId())
+		);
+	}
+	elseif ($message->getData() == "/8")
+	{
+		$tg_id = $message->getFrom()->getId();
+		$sms_rev = "Выберите валюту:";
+		
+		$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+			
+		$temp_message = $bot->sendMessage($tg_id, $sms_rev, null, false, null, $keyboard);
+		$bot->deleteMessage(
+			$temp_message->getChat()->getId(),
+			getMsgId($temp_message->getChat()->getId())
 		);
 	}
 });
@@ -111,15 +185,119 @@ try {
     $bot->on(function (\TelegramBot\Api\Types\Update $update) use ($bot) {
         $message = $update->getMessage();
         $id = $message->getChat()->getId();
-        if ($message->getText() == 'Игрок') {
-        	$btns = preparePlayersBtns();
-			$keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($btns);
+        $msg = $message->getText();
 
-        }
-        $temp_message = $bot->sendMessage($id, 'Your message: ' . $message->getText(), null, false, null, $keyboard);
-        file_put_contents('log.txt', print_r($temp_message, 1), FILE_APPEND);	
-		file_put_contents('log.txt', print_r("		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", 1)."\n", FILE_APPEND);
-        setMsgIdForDel($temp_message->getMessageId(), $message->getChat()->getId());
+        switch($msg){
+        	case 'Сделать ставку':
+				$sms_rev = 'На что будем ставить?';
+				$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Игрок", "Раса", "Роль")), true, true);
+				$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+			break;
+			case 'Игрок':
+				$btns = preparePlayersBtns();
+				$keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($btns);
+				$temp_message = $bot->sendMessage($id, 'Your message: ' . $message->getText(), null, false, null, $keyboard);
+		        setMsgIdForDel($temp_message->getMessageId(), $message->getChat()->getId());
+		  //       setRatesHeader('player', $id);
+				// setPlayersHeader('player', $id, 5);
+			break;
+			case 'Раса':
+				$sms_rev = 'Выберите расу:';
+				$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Орда", "Альянс")), true, true);
+				$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+			break;
+			case 'Роль':
+				$sms_rev = 'Выберите роль:';
+				$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Щит", "Хил", "Дд")), true, true);
+				$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+			break;
+			case 'Орда':
+				$sms_rev = "Выберите валюту:";
+				$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+				$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+				setRatesHeader('horde', $id);
+				setRace('horde', $id, 5);
+			break;
+			case 'Альянс':
+				$sms_rev = "Выберите валюту:";
+				$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+				$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+				setRatesHeader('alliance', $id);
+				setRace('alliance', $id, 5);
+			break;
+			case 'Щит':
+				$sms_rev = "Выберите валюту:";
+				$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+				$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+				setRatesHeader('shield', $id);
+				setRole('shield', $id, 5);
+			break;
+			case 'Хил':
+				$sms_rev = "Выберите валюту:";
+				$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+				$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+				setRatesHeader('heal', $id);
+				setRole('heal', $id, 5);
+			break;
+			case 'Дд':
+				$sms_rev = "Выберите валюту:";
+				$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Gold", "Coin")), true, true);
+				$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+				setRatesHeader('dd', $id);
+				setRole('dd', $id, 5);
+			break;
+			case 'Coin':
+				$sms_rev = "Введите значение:\nМинимальная ставка 0.01";
+				$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardRemove(true);
+				$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+				setCurrency('coin', $id, 5);
+			break;
+			case 'Gold':
+				$sms_rev = "Введите значение:\nМинимальная ставка 1000\nМаксимальная 50 000 000";
+				$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardRemove(true);
+				$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+				setCurrency('gold', $id, 5);
+			break;
+			default:
+				$user = getUser($id);
+				$obj = '';
+				if ($user['PROPERTY_ROLE_VALUE']) {
+					$obj = $user['PROPERTY_ROLE_VALUE'];
+				}elseif ($user['PROPERTY_RACE_VALUE']) {
+					$obj = $user['PROPERTY_RACE_VALUE'];
+				}elseif ($user['PROPERTY_PLAYER_ID_VALUE']) {
+					$obj = $user['PROPERTY_PLAYER_ID_VALUE'];
+				}
+				if (!is_numeric($msg)) {
+					$sms_rev ="Ведите число!";
+					$bot->sendMessage($id, $sms_rev);
+				}elseif ($msg<0) {
+					$sms_rev ="Введите число больше 0!";
+					$bot->sendMessage($id, $sms_rev);
+				}elseif (empty($obj)) {
+					$sms_rev ="Сначала выберите на что ставить!\nКоманда /start_rates";
+					$bot->sendMessage($id, $sms_rev);
+				}elseif (is_numeric($obj)) {
+					$sms_rev ="Ставка принята\nБлагодарим за участие!\nПосмотреть свои ставки - /me";
+					$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Сделать ставку")), true, true);
+					$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+					
+					// setValue($obj, $id, $msg, $user['PROPERTY_CURRENCY_VALUE']);
+					setPlayerRates($obj, IBLOCK_ID_PLAYERS_RATES, $msg, $user['PROPERTY_CURRENCY_VALUE'], $id);
+
+					clearUser($id, 5);
+				}else{
+					$sms_rev ="Ставка принята\nБлагодарим за участие!\nПосмотреть свои ставки - /me";
+					$keyboard = new \TelegramBot\Api\Types\ReplyKeyboardMarkup(array(array("Сделать ставку")), true, true);
+					$bot->sendMessage($id, $sms_rev, null, false, null, $keyboard);
+					
+					setValue($obj, $id, $msg, $user['PROPERTY_CURRENCY_VALUE']);
+
+					clearUser($id, 5);
+				}
+			break;	
+    	}
+        
     }, function () {
         return true;
     });

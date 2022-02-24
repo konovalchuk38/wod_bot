@@ -56,7 +56,7 @@ function isRegister($id)
 
 function getUser($tg_id)
 {
-	$arSelect = Array("ID", "NAME", "PROPERTY_currency", "PROPERTY_tg_id", "PROPERTY_User_name", "PROPERTY_role", "PROPERTY_race", "DETAIL_TEXT");
+	$arSelect = Array("ID", "NAME", "PROPERTY_currency", "PROPERTY_tg_id", "PROPERTY_User_name", "PROPERTY_role", "PROPERTY_race", "DETAIL_TEXT", "PROPERTY_msg_id", "PROPERTY_player_id");
 	$arFilter = Array("IBLOCK_ID"=>IBLOCK_ID_USER, "ACTIVE"=>"Y", "PROPERTY_tg_id"=>$tg_id);
 	$res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>50), $arSelect);
 	while($ob = $res->GetNextElement())
@@ -95,6 +95,12 @@ function setRatesHeader($obj = '', $tg_id, $value = '')
 			add($iblock, $user);
 		}
 	}
+	elseif ($obj == 'player') {
+		$iblock = IBLOCK_ID_PLAYERS_RATES;
+		if (!checkRow($obj, $tg_id)) {
+			add($iblock, $user);
+		}
+	}
 	
 }
 
@@ -114,6 +120,9 @@ function checkRow($obj = '', $tg_id)
 		$user_id = getUser($tg_id)['ID'];
 	}elseif ($obj == 'dd') {
 		$iblock = IBLOCK_ID_DD;
+		$user_id = getUser($tg_id)['ID'];
+	}elseif ($obj == 'player') {
+		$iblock = IBLOCK_ID_PLAYERS_RATES;
 		$user_id = getUser($tg_id)['ID'];
 	}
 	$arSelect = Array("ID");
@@ -332,6 +341,26 @@ function setRace($str, $tg_id, $iblock_id)
 	$res = $el->Update( $user['ID'], $arLoadProductArray);
 
 }
+function setPlayersHeader($str, $tg_id, $iblock_id)
+{
+	$el = new CIBlockElement;
+	$user = getUser($tg_id);
+	$PROP = array();
+	$PROP['currency'] = $user['PROPERTY_CURRENCY_VALUE']; //currency
+	$PROP["tg_id"] = $user['PROPERTY_TG_ID_VALUE']; //tg_id
+	$PROP["User_name"] = $user['PROPERTY_USER_NAME_VALUE']; //user_name
+	$PROP["role"] = $user['PROPERTY_ROLE_VALUE']; //role
+	$PROP["race"] = $user['PROPERTY_RACE_VALUE']; //race
+	$PROP["player_id"] = $str; //player
+	$arLoadProductArray = Array(  
+	   'MODIFIED_BY' => 1, // элемент изменен текущим пользователем  
+	   'IBLOCK_SECTION_ID' => false, // элемент лежит в корне раздела  
+	   'IBLOCK_ID' => $iblock_id,
+	   'PROPERTY_VALUES' => $PROP,
+	);
+	$res = $el->Update( $user['ID'], $arLoadProductArray);
+
+}
 
 function clearUser($tg_id, $iblock_id)
 {
@@ -423,6 +452,43 @@ function getRatesDd($iblock_id, $user_id)
         $arFields = $ob->GetFields();
     }
     $str = "Ставки на роль Дд⚔️:\n💰Gold - " . $arFields['PROPERTY_GOLD_VALUE'] . "\n💎Coin - " . $arFields['PROPERTY_COIN_VALUE'] . "\n";
+    return $str;
+}
+function getRatesPlayers($iblock_id, $user_id)
+{
+	$str = "Ставки на участников:\n";
+	$arrBtn = [];
+	$arSelect = Array("NAME", "ID");
+    $arFilter = Array("IBLOCK_ID"=>IBLOCK_ID_PLAYERS, "ACTIVE"=>"Y");
+    $res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>500), $arSelect);
+    	while($ob = $res->GetNextElement())
+	    {
+	        $a = $ob->GetFields();
+	        $arrBtn[] = ['text' =>	$a['NAME'],	"id" => $a['ID']];
+
+	    }
+    	$arFields = array();
+    	// pre($arrBtn);
+
+	foreach ($arrBtn as $key => $value) {
+		// pre($value);
+		$arSelect1 = Array("PROPERTY_gold", "PROPERTY_coin");
+	    $arFilter1 = Array("IBLOCK_ID"=>$iblock_id, "ACTIVE"=>"Y", "PROPERTY_user_id"=>$user_id, "PROPERTY_player" => $value['id']);
+	    $res1 = CIBlockElement::GetList(Array(), $arFilter1, false, Array("nPageSize"=>500), $arSelect1);
+	    
+	    while($ob = $res1->GetNextElement())
+	    {
+	        $a = $ob->GetFields();
+	        $arFields[$value['id']]['gold'] += $a['PROPERTY_GOLD_VALUE'];
+	        $arFields[$value['id']]['coin'] += $a['PROPERTY_COIN_VALUE'];
+	        $arFields[$value['id']]['name'] = $value['text'];
+	    }
+	    
+	}
+	foreach ($arFields as $key => $value) {
+    	$str .= "Игрок - " . $value['name']. "\n";
+        $str .= "💰Gold - " . $value['gold'] . "\n💎Coin - " . $value['coin'] . "\n";
+    }	
     return $str;
 }
 
@@ -563,4 +629,39 @@ function getMsgId($tg_id)
 {
 	$user = getUser($tg_id);
 	return $user['PROPERTY_MSG_ID_VALUE'];
+}
+function getPlayer($q)
+{
+	$q = str_replace('/','',$q);
+	$arSelect = Array("NAME", "ID");
+    $arFilter = Array("IBLOCK_ID"=>IBLOCK_ID_PLAYERS, "ACTIVE"=>"Y", "PROPERTY_player_hl_id" => $q);
+    $res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>500), $arSelect);
+    	while($ob = $res->GetNextElement())
+	    {
+	        $a = $ob->GetFields();
+	        $id = $a['ID'];
+
+	    }
+	    return $id;
+}
+function setPlayerRates($playerId, $iblock_id, $value, $currency, $tg_id)
+{
+
+
+	$iblock = $iblock_id;
+	$itemId = checkRow($obj, $tg_id);
+	$oldVal = getValue('horde', $tg_id, $currency);
+	
+	$user = getUser($tg_id);
+	$arSelect = Array("NAME", "ID");
+    $arFilter = Array("IBLOCK_ID"=>IBLOCK_ID_PLAYERS_RATES, "ACTIVE"=>"Y", "PROPERTY_player_hl_id" => $q);
+    $res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>500), $arSelect);
+    	while($ob = $res->GetNextElement())
+	    {
+	        $a = $ob->GetFields();
+	        $id = $a['ID'];
+
+	    }
+
+	$a = update($iblock, $user, $value, $currency, $itemId, $oldVal);
 }
